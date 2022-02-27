@@ -3,6 +3,8 @@
 
 #include "driver/elevio.h"
 #include "order.h"
+#include "light.h"
+#include "timer.h"
 
 void set_initial_condition(){
     //printf("floor: %d \n",floor);
@@ -18,8 +20,8 @@ void set_current_floor(int* current_floor){
     if(elevio_floorSensor() != -1){
         *current_floor = elevio_floorSensor();
     }
-    
 }
+
 
 void add_order(){
     for(int i = 0; i < N_FLOORS; i++){
@@ -68,7 +70,15 @@ void go(int current_floor){
                     floor_order(f, current_floor);
                 }
                 else{
-                    elevio_motorDirection(DIRN_STOP); 
+                    elevio_motorDirection(DIRN_STOP);
+
+                    // timer_start();
+                    // //elevio_doorOpenLamp(1); //timer fungerer med while, men da er vi stuck i den
+                    // while(timer_expired() == 0){ //begynner ikke å telle
+                    //     elevio_doorOpenLamp(1);
+                    // }
+                    // elevio_doorOpenLamp(0);
+                  
                     delete_order(f,b);
                 }
             }

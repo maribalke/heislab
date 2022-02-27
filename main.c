@@ -17,6 +17,7 @@ int main(){
 
     //int floor = elevio_floorSensor();
     set_initial_condition(); 
+    
     int current_floor;
 
     while(1){
@@ -26,7 +27,7 @@ int main(){
 
         floor_light(floor);
         order_light();
-
+        obstruction_light();
 
         add_order();
         floor_order(floor, current_floor);

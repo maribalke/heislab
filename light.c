@@ -1,11 +1,12 @@
 #include "light.h"
+#include "timer.h"
 
 void floor_light(int floor){
     if(floor != -1){
         elevio_floorIndicator(floor);
     }
-
 }
+
 
 void order_light(){
     for(int f = 0; f < N_FLOORS; f++){
@@ -16,9 +17,20 @@ void order_light(){
     }
 }
 
+
 void stop_lamp(){
     while(elevio_stopButton()){
         elevio_stopLamp(1);
     }
     elevio_stopLamp(0);       
 }
+
+void obstruction_light(){
+    if(elevio_obstruction()){
+        elevio_stopLamp(1);
+    } else {
+        elevio_stopLamp(0);
+    }
+        
+}
+
