@@ -15,13 +15,14 @@ int fsm_valid_stop(){
 
 
 
-void set_next_stop(int floor_request)
+void set_next_stop()
 {   
+    int floor_request = get_floor_request();
     MotorDirection current_direction = get_current_direction();
     // hvis direction oppover, lop fra next_stop  og oppver, leter etter nedover-pil og kryss
     if (current_direction == DIRN_UP)
     {
-        for (int f = floor_request + 1; f < N_FLOORS; ++f)
+        for (int f = floor_request+1; f < N_FLOORS; ++f)
         {
 
             if (queue[f][1] == 1)
@@ -54,10 +55,11 @@ void set_next_stop(int floor_request)
     }
 }
 
-void fsm_run(int floor_request, int current_floor){
 
-    floor_request = get_floor_request();
 
+void fsm_run(int current_floor){
+
+    int floor_request = get_floor_request();
     switch(current_state){
 
         case(INIT):
@@ -67,7 +69,6 @@ void fsm_run(int floor_request, int current_floor){
 
         case(IDLE):
             add_order();
-
             if(elevio_stopButton()){
                 current_state = EMERGENCY_STOP;
             }
@@ -80,27 +81,31 @@ void fsm_run(int floor_request, int current_floor){
         case(MOVING):
 
             add_order();
+            set_next_stop();
             order_light(); 
             
+            //MotorDirection dir = get_current_direction();
 
-            MotorDirection dir = get_current_direction();
-
-            if(dir == DIRN_STOP){
+            if(get_current_direction() == DIRN_STOP){
                 printf("løkke1\n");
+                set_next_stop();
                 elevator_direction(floor_request, current_floor);
+                
             }
 
             if(elevio_floorSensor() == floor_request){
+                printf("løkke2\n");
+                
                 current_state = DOOR_OPEN;
-                elevio_motorDirection(DIRN_STOP);
+                //elevio_motorDirection(DIRN_STOP); //stopper hele og vi må da legge til ny retning
             }
 
-            set_next_stop(floor_request);
-            if(fsm_valid_stop()){
-                current_state = DOOR_OPEN;
-            } 
+            
+            // if(fsm_valid_stop()){
+            //     current_state = DOOR_OPEN;
+            // } 
 
-            elevator_direction(floor_request, current_floor);
+            //elevator_direction(floor_request, current_floor);
 
             if(elevio_stopButton()){
                 current_state = EMERGENCY_STOP;
@@ -111,13 +116,14 @@ void fsm_run(int floor_request, int current_floor){
 
         case (DOOR_OPEN):
             add_order();
+            set_next_stop();
 
             if(elevio_stopButton()){
                 current_state = EMERGENCY_STOP;
             }
 
             elevio_motorDirection(DIRN_STOP);
-            elevio_doorOpenLamp(1);
+            elevio_doorOpenLamp(0);
             //printf("Door open\n");
             int f = get_floor_request();
             int b = get_btn_request();
@@ -145,6 +151,7 @@ void fsm_run(int floor_request, int current_floor){
                 while(elevio_stopButton() == 1){
                     current_state = IDLE;
                     elevio_stopLamp(0);
+
                 }
             }
 

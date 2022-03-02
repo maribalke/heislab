@@ -12,6 +12,7 @@ extern state current_state;
 
 int fsm_valid_stop();
 
-void set_next_stop(int floor_request);
+void set_next_stop();
 
-void fsm_run(int floor, int current_floor);
+void fsm_run(int current_floor);
+

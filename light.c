@@ -39,3 +39,11 @@ void obstruction_light(){
     }
         
 }
+
+void delete_all_lights(){
+    for(int f = 0; f < N_FLOORS; f++){
+        for (int b = 0; b < N_BUTTONS; b++){
+            delete_light(f,b);
+        }
+    }
+}

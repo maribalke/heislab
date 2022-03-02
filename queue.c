@@ -27,13 +27,6 @@ int queue_any_orders(){
 
 
 
-
-
-
-
-
-
-
 int queue_any_orders_above(int current_floor){
     for(int f = current_floor; f < N_FLOORS; f++){
         for(int b = 0; b < N_BUTTONS; b++){

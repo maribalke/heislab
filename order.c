@@ -73,7 +73,7 @@ void cab_direction(int floor, int current_floor){
 
 
 void elevator_direction(int floor, int current_floor){
-    
+
     if(current_floor > floor){
         elevio_motorDirection(DIRN_DOWN);
         }
@@ -99,11 +99,3 @@ void delete_all_orders(){
         }
     }
 }
-
-
-
-
-
-
-
-
