@@ -5,6 +5,7 @@
 #include "driver/elevio.h"
 #include "order.h"
 #include "light.h"
+#include "fsm.h"
 
 
 
@@ -23,15 +24,15 @@ int main(){
     while(1){
 
         int floor = elevio_floorSensor();
+        int floor_request = get_floor_request();
         set_current_floor(&current_floor);
 
         floor_light(floor);
-        order_light();
+        
         obstruction_light();
 
-        add_order();
-        floor_order(floor, current_floor);
-        go(current_floor);
+        fsm_run(floor_request, current_floor);
+        
         
 
         if(elevio_stopButton()){
@@ -43,11 +44,3 @@ int main(){
     }
     return 0;
 }  
-        
-        
-
-    
-
-    
-
-   

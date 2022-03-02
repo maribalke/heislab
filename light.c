@@ -39,4 +39,3 @@ void obstruction_light(){
     }
         
 }
-
