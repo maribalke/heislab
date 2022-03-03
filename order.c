@@ -13,6 +13,8 @@
 
 void set_initial_condition(){
     //printf("floor: %d \n",floor);
+    delete_all_orders();
+    delete_all_lights();
     int floor = elevio_floorSensor();
     while(floor == -1){
         floor = elevio_floorSensor();
@@ -37,29 +39,6 @@ void add_order(){
         }
     }
 }
-
-int get_floor_request(){
-    for(int f = 0; f < N_FLOORS; f++){
-        for(int b = 0; b < N_BUTTONS; b++){
-            if(queue[f][b] == 1){
-                return f;
-            }
-        }
-    }
-    return 0;
-}
-
-int get_btn_request(){
-    for(int f = 0; f < N_FLOORS; f++){
-        for(int b = 0; b < N_BUTTONS; b++){
-            if(queue[f][b] == 1){
-                return b;
-            }
-        }
-    }
-    return 0;
-}
-
 
 
 void cab_direction(int floor, int current_floor){

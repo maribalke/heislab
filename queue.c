@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-static MotorDirection current_direction = DIRN_STOP;
+static MotorDirection current_direction; 
 
 void set_current_direction(MotorDirection direction){
     current_direction=direction;
@@ -47,4 +47,34 @@ int queue_any_orders_below(int current_floor){
         }  
     }
     return 0;
+}
+
+
+
+void queue_prio(int current_floor){
+
+    // if(elevio_floorSensor() != -1){
+    //     switch (get_current_direction())
+    //     {
+    //     case DIRN_DOWN:
+    //         for(int f = 0; f < current_floor; ++f){
+    //             if((queue[f][1] == 1) || (queue[f][2] == 1)){
+    //                 elevator_direction(f, current_floor);
+                    
+    //             }
+            
+    //         }
+            
+    //         break;
+
+    //     case DIRN_UP:
+            
+    //         break;
+
+    //     default:
+    //         break;
+        
+    //     }
+    // }
+    
 }
