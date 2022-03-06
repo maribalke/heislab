@@ -3,78 +3,62 @@
 
 #include <stdio.h>
 
-static MotorDirection current_direction; 
+static MotorDirection current_direction = DIRN_STOP;
 
-void set_current_direction(MotorDirection direction){
-    current_direction=direction;
+int queue[NUMBER_OF_FLOORS][NUMBER_OF_BUTTONS];
+
+
+void add_order(){
+    for(int f = 0; f < NUMBER_OF_FLOORS; ++f) {
+        for(int b = 0; b < NUMBER_OF_BUTTONS; ++b) {
+            int btnPressed = elevio_callButton(f,b);//f is floor and b is buttontype [up, down, hb]
+            if(btnPressed == 1) {
+                queue[f][b] = btnPressed;
+                elevio_buttonLamp(f, b, 1);
+            }
+        }
+    }
 }
 
-MotorDirection get_current_direction(){
-    return current_direction;
-}
+
 
 int queue_any_orders(){
+    for(int f = 0; f < NUMBER_OF_FLOORS; ++f){
+        for(int b = 0; b < NUMBER_OF_BUTTONS; ++b){
+            if(queue[f][b] != 0){
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+
+int queue_find_entry() {
+    for(int f = 0; f < NUMBER_OF_FLOORS; ++f){
+        for(int b = 0; b < NUMBER_OF_BUTTONS; ++b){
+            if(queue[f][b] == 1){
+                return f;
+            }
+        }
+    }
+    //return 0;
+}
+
+
+
+
+void delete_order(int f){
+    for(int b = 0; b < N_BUTTONS; b++){
+        queue[f][b] = 0;
+    }  
+}
+
+
+void delete_all_orders(){
     for(int f = 0; f < N_FLOORS; f++){
-        for(int b = 0; b < N_BUTTONS; b++){
-            if(queue[f][b] == 1 ){
-                printf("%s", "any orders true\n\r");
-                return 1;
-            }    
+        for (int b = 0; b < N_BUTTONS; b++){
+            queue[f][b] = 0;
         }
     }
-    return 0;
-}
-
-
-
-int queue_any_orders_above(int current_floor){
-    for(int f = current_floor; f < N_FLOORS; f++){
-        for(int b = 0; b < N_BUTTONS; b++){
-            if(queue[f][b]==1){
-                return 1;
-            } 
-        }
-    }
-    return 0;
-}
-
-int queue_any_orders_below(int current_floor){
-    for(int f = 0; f < current_floor; f++){
-        for(int b = 0; b < N_BUTTONS; b++){
-            if(queue[f][b]==1){
-                return 1;
-            } 
-        }  
-    }
-    return 0;
-}
-
-
-
-void queue_prio(int current_floor){
-
-    // if(elevio_floorSensor() != -1){
-    //     switch (get_current_direction())
-    //     {
-    //     case DIRN_DOWN:
-    //         for(int f = 0; f < current_floor; ++f){
-    //             if((queue[f][1] == 1) || (queue[f][2] == 1)){
-    //                 elevator_direction(f, current_floor);
-                    
-    //             }
-            
-    //         }
-            
-    //         break;
-
-    //     case DIRN_UP:
-            
-    //         break;
-
-    //     default:
-    //         break;
-        
-    //     }
-    // }
-    
 }

@@ -1,11 +1,9 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <time.h>
 #include "driver/elevio.h"
-#include "order.h"
-#include "light.h"
+
 #include "fsm.h"
 
 
@@ -30,7 +28,7 @@ int main(){
 
         floor_light(floor);
         
-        obstruction_light();
+        
 
         fsm_run(current_floor);
         
@@ -39,16 +37,10 @@ int main(){
         if(elevio_stopButton()){
             elevio_motorDirection(DIRN_STOP);
             stop_lamp();
-            delete_all_lights();
-            break;
+            delete_all_lights();   
         }
+
         nanosleep(&(struct timespec){0, 20*1000*1000}, NULL);
     }
     return 0;
-}     
-
-    
-
-    
-
-   
+}   
