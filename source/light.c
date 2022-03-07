@@ -25,12 +25,6 @@ void delete_light(int f){
     }
 }
 
-void stop_lamp(){
-    while(elevio_stopButton()){
-        elevio_stopLamp(1);
-    }
-    elevio_stopLamp(0);       
-}
 
 void delete_all_lights(){
     for(int f = 0; f < N_FLOORS; f++){

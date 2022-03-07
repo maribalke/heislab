@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 
-static MotorDirection current_direction = DIRN_STOP;
-
 int queue[NUMBER_OF_FLOORS][NUMBER_OF_BUTTONS];
 
 
@@ -42,7 +40,7 @@ int queue_find_entry() {
             }
         }
     }
-    //return 0;
+    return 0;
 }
 
 

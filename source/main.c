@@ -28,17 +28,12 @@ int main(){
 
         floor_light(floor);
         
+
+        fsm_run();
+        
         
 
-        fsm_run(current_floor);
         
-        
-
-        if(elevio_stopButton()){
-            elevio_motorDirection(DIRN_STOP);
-            stop_lamp();
-            delete_all_lights();   
-        }
 
         nanosleep(&(struct timespec){0, 20*1000*1000}, NULL);
     }

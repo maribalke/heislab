@@ -14,7 +14,7 @@ position previous_floor_position; // kan bare være (0, .., 3)
 
 position next_stop;
 
-int joker = 0;
+
 
 void set_initial_condition(){
     //printf("floor: %d \n",floor);
@@ -192,17 +192,14 @@ void fsm_run()
             current_state = EMERGENCY_STOP;
         }
 
-        if(elevio_obstruction()){
-            current_state = OBSTRUCTION;
-        } 
-
-        if(queue_any_orders() != 0 && timer_expired() && !elevio_obstruction()){
+        if(queue_any_orders() != 0 && timer_expired()){
             current_state = MOVING;
         }
 
         if(timer_expired()){
             elevio_doorOpenLamp(0);
         }
+
 
         break;
 
@@ -233,8 +230,16 @@ void fsm_run()
         {
             current_state = DOOR_OPEN;
         }
+        if (fsm_valid_stop() && elevio_obstruction())
+        {
+            current_state = OBSTRUCTION;
+        }
 
         fsm_go_to(next_stop);
+
+
+       
+        
 
         if(elevio_stopButton()){
             current_state = EMERGENCY_STOP;
@@ -247,62 +252,66 @@ void fsm_run()
     case (DOOR_OPEN):
         add_order();
         order_light();
-            
-        if(elevio_stopButton()){
-            current_state = EMERGENCY_STOP;
-        } 
 
-        if(elevio_obstruction()){
-            current_state = OBSTRUCTION;
-        } 
-   
         elevio_motorDirection(DIRN_STOP);
-        elevio_doorOpenLamp(0);
         
         int f = elevio_floorSensor();
         delete_order(f);
         delete_light(f);
-
-        current_state = IDLE;
-        timer_start(); 
+            
+        if(elevio_stopButton()){
+            current_state = EMERGENCY_STOP;
+        } 
         
+        if(elevio_obstruction()){
+            current_state = OBSTRUCTION;
+        } 
+        else{
+            elevio_doorOpenLamp(0);
+            current_state = IDLE;
+        }
+
+        
+    
+        timer_start();
         break;
         
     
     case(EMERGENCY_STOP):
         elevio_motorDirection(DIRN_STOP);
         delete_all_orders();
+        delete_all_lights();   
         
-
-        if(elevio_stopButton() ){
+        while(elevio_stopButton()){
+            elevio_stopLamp(1);
+            if(elevio_floorSensor() != -1){
                 elevio_doorOpenLamp(1);
+            }
         }
-        
 
-        if(!elevio_stopButton() && elevio_floorSensor() != -1)
+        if(elevio_floorSensor() != -1)
         {
             current_state = DOOR_OPEN;
         } else{
             current_state = IDLE;
         }  
         
-        break; 
+    break; 
 
     case(OBSTRUCTION):
-        add_order();
-        order_light();
-
-        elevio_doorOpenLamp(1);
-        elevio_stopLamp(0);
-
+        while(elevio_obstruction()){
+            add_order();
+            order_light();
+            elevio_doorOpenLamp(1);
+            elevio_stopLamp(0);
+        }
+        
         if(!elevio_obstruction())
         {
             current_state = DOOR_OPEN;
         }   
 
-        break;
-        
+    break;
     }
-    
 }
 
