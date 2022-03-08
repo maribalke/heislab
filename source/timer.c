@@ -4,16 +4,16 @@
 
 #define TIME_LIMIT 3
 
-static int doorTimer = -1;
+static int door_timer = -1;
 
 
 void timer_start() {
-	doorTimer = time(NULL);
+	door_timer = time(NULL);
 	elevio_doorOpenLamp(1);
 }
 
 
 int timer_expired() {
-	if (doorTimer == -1) return 0;
-	else return (time(NULL) - doorTimer > TIME_LIMIT);
+	if (door_timer == -1) return 0;
+	else return (time(NULL) - door_timer > TIME_LIMIT);
 }

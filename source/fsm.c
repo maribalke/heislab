@@ -16,7 +16,7 @@ position next_stop;
 
 
 
-void fsm_update_current_floor()
+void fsm_update_last_floor()
 {
     current_position = elevio_floorSensor();
     if (current_position != -1)
@@ -144,7 +144,7 @@ void fsm_run()
 
     printf("%d\n", next_stop);
 
-    fsm_update_current_floor(); 
+    fsm_update_last_floor(); 
 
     switch (current_state)
     {

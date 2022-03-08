@@ -29,7 +29,7 @@ typedef enum {unknown = -1, first = 0, second = 1, third = 2, fourth = 3} positi
  * @brief Updates the new floor position as the elevator is located at a floor. The previous value is stored.
  * 
  */
-void fsm_update_current_floor();
+void fsm_update_last_floor();
 
 
 /**
