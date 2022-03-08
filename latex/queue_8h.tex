@@ -1,0 +1,138 @@
+\hypertarget{queue_8h}{}\doxysection{source/queue.h File Reference}
+\label{queue_8h}\index{source/queue.h@{source/queue.h}}
+
+
+Functions to control the queue.  
+
+
+{\ttfamily \#include \char`\"{}driver/elevio.\+h\char`\"{}}\newline
+Include dependency graph for queue.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{queue_8h_a369ad7c82269bb15282d3b9972e54e57}\label{queue_8h_a369ad7c82269bb15282d3b9972e54e57}} 
+void \mbox{\hyperlink{queue_8h_a369ad7c82269bb15282d3b9972e54e57}{queue\+\_\+set\+\_\+initial\+\_\+condition}} ()
+\begin{DoxyCompactList}\small\item\em Initilize the elevator to a position that is not inbetween floors. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{queue_8h_a574e18323597a59de411d570191df402}\label{queue_8h_a574e18323597a59de411d570191df402}} 
+void \mbox{\hyperlink{queue_8h_a574e18323597a59de411d570191df402}{queue\+\_\+add\+\_\+order}} ()
+\begin{DoxyCompactList}\small\item\em The function sets the correct place in the matrix to 1 if the belonging button is pressed. The belonging panel light will be turned on if button is pressed. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{queue_8h_ae98370032cd81a49661ffd2a8b9781fa}{queue\+\_\+any\+\_\+orders}} ()
+\begin{DoxyCompactList}\small\item\em Iterates trough the matrix to check whether there is any orders or not. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{queue_8h_a0568b97d13887d6f5711b05ac5e55664}{queue\+\_\+get\+\_\+floor}} ()
+\begin{DoxyCompactList}\small\item\em Iterates though the matrix and finds the floor where a button is pressed. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{queue_8h_a16ba8ab52dbdd42be2656f45e9811dc9}{queue\+\_\+delete\+\_\+order}} (int f)
+\begin{DoxyCompactList}\small\item\em Deletes all orders in the same floor f. The belonging lights is turned off. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{queue_8h_a25ddb5a68fbbd63e2ceb905b3c57595f}{queue\+\_\+delete\+\_\+all\+\_\+orders}} ()
+\begin{DoxyCompactList}\small\item\em Deletes all orders in the matrix and turn off all lights. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{queue_8h_aaa35e1f702ad25b3792e9661e291f3b5}{queue}} \mbox{[}N\+\_\+\+F\+L\+O\+O\+RS\mbox{]}\mbox{[}N\+\_\+\+B\+U\+T\+T\+O\+NS\mbox{]}
+\begin{DoxyCompactList}\small\item\em Zero matrix with number of floors times number of buttons. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Functions to control the queue. 
+
+\begin{DoxyAuthor}{Author}
+Hermine Alfsen, Mari Balke Fjellang 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2022-\/03-\/08
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2022 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{queue_8h_ae98370032cd81a49661ffd2a8b9781fa}\label{queue_8h_ae98370032cd81a49661ffd2a8b9781fa}} 
+\index{queue.h@{queue.h}!queue\_any\_orders@{queue\_any\_orders}}
+\index{queue\_any\_orders@{queue\_any\_orders}!queue.h@{queue.h}}
+\doxysubsubsection{\texorpdfstring{queue\_any\_orders()}{queue\_any\_orders()}}
+{\footnotesize\ttfamily int queue\+\_\+any\+\_\+orders (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Iterates trough the matrix to check whether there is any orders or not. 
+
+\begin{DoxyReturn}{Returns}
+1 if any orders, if else 0. 
+\end{DoxyReturn}
+
+
+Definition at line 34 of file queue.\+c.
+
+\mbox{\Hypertarget{queue_8h_a25ddb5a68fbbd63e2ceb905b3c57595f}\label{queue_8h_a25ddb5a68fbbd63e2ceb905b3c57595f}} 
+\index{queue.h@{queue.h}!queue\_delete\_all\_orders@{queue\_delete\_all\_orders}}
+\index{queue\_delete\_all\_orders@{queue\_delete\_all\_orders}!queue.h@{queue.h}}
+\doxysubsubsection{\texorpdfstring{queue\_delete\_all\_orders()}{queue\_delete\_all\_orders()}}
+{\footnotesize\ttfamily void queue\+\_\+delete\+\_\+all\+\_\+orders (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Deletes all orders in the matrix and turn off all lights. 
+
+
+
+Definition at line 68 of file queue.\+c.
+
+\mbox{\Hypertarget{queue_8h_a16ba8ab52dbdd42be2656f45e9811dc9}\label{queue_8h_a16ba8ab52dbdd42be2656f45e9811dc9}} 
+\index{queue.h@{queue.h}!queue\_delete\_order@{queue\_delete\_order}}
+\index{queue\_delete\_order@{queue\_delete\_order}!queue.h@{queue.h}}
+\doxysubsubsection{\texorpdfstring{queue\_delete\_order()}{queue\_delete\_order()}}
+{\footnotesize\ttfamily void queue\+\_\+delete\+\_\+order (\begin{DoxyParamCaption}\item[{int}]{f }\end{DoxyParamCaption})}
+
+
+
+Deletes all orders in the same floor f. The belonging lights is turned off. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em f} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 60 of file queue.\+c.
+
+\mbox{\Hypertarget{queue_8h_a0568b97d13887d6f5711b05ac5e55664}\label{queue_8h_a0568b97d13887d6f5711b05ac5e55664}} 
+\index{queue.h@{queue.h}!queue\_get\_floor@{queue\_get\_floor}}
+\index{queue\_get\_floor@{queue\_get\_floor}!queue.h@{queue.h}}
+\doxysubsubsection{\texorpdfstring{queue\_get\_floor()}{queue\_get\_floor()}}
+{\footnotesize\ttfamily int queue\+\_\+get\+\_\+floor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Iterates though the matrix and finds the floor where a button is pressed. 
+
+\begin{DoxyReturn}{Returns}
+floor 
+\end{DoxyReturn}
+
+
+Definition at line 46 of file queue.\+c.
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{queue_8h_aaa35e1f702ad25b3792e9661e291f3b5}\label{queue_8h_aaa35e1f702ad25b3792e9661e291f3b5}} 
+\index{queue.h@{queue.h}!queue@{queue}}
+\index{queue@{queue}!queue.h@{queue.h}}
+\doxysubsubsection{\texorpdfstring{queue}{queue}}
+{\footnotesize\ttfamily int queue\mbox{[}N\+\_\+\+F\+L\+O\+O\+RS\mbox{]}\mbox{[}N\+\_\+\+B\+U\+T\+T\+O\+NS\mbox{]}}
+
+
+
+Zero matrix with number of floors times number of buttons. 
+
+
+
+Definition at line 6 of file queue.\+c.
+

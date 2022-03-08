@@ -2,48 +2,27 @@
 
 state current_state = INIT;
 
-direction current_direction = DIRECTION_TBT;
+direction current_direction = DIRECTION_NONE;
 
-direction previous_direction = DIRECTION_TBT;
+direction previous_direction = DIRECTION_NONE;
 
-position current_position; // kan vær (-1)
+position current_position; 
 
-position newest_floor_position; // kan bare være (0,..,3)
+position last_floor_position; 
 
-position previous_floor_position; // kan bare være (0, .., 3)
+position previous_floor_position; 
 
 position next_stop;
 
 
 
-void set_initial_condition(){
-    //printf("floor: %d \n",floor);
-    delete_all_orders();
-    delete_all_lights();
-    elevio_stopLamp(0);
-
-    int floor = elevio_floorSensor();
-    while(floor == -1){
-        floor = elevio_floorSensor();
-        elevio_motorDirection(DIRN_DOWN);
-    }
-    elevio_motorDirection(DIRN_STOP);
-}
-
-
-void set_current_floor(int* current_floor){
-    if(elevio_floorSensor() != -1){
-        *current_floor = elevio_floorSensor();
-    }
-}
-
-void fsm_update_floor_position()
+void fsm_update_current_floor()
 {
     current_position = elevio_floorSensor();
     if (current_position != -1)
     {
-        previous_floor_position = newest_floor_position;
-        newest_floor_position = current_position;
+        previous_floor_position = last_floor_position;
+        last_floor_position = current_position;
     }
 }
 
@@ -51,80 +30,75 @@ void fsm_update_floor_position()
 
 void fsm_go_to(int next_stop)
 {
-    if (next_stop > newest_floor_position)
+    if (next_stop > last_floor_position)
     {
         elevio_motorDirection(DIRN_UP);
     }
-    if (next_stop < newest_floor_position)
+    if (next_stop < last_floor_position)
     {
         elevio_motorDirection(DIRN_DOWN);
     }
 
-    if (next_stop == newest_floor_position && current_position == -1 && previous_direction == DIRECTION_UP) {
+    if (next_stop == last_floor_position && current_position == -1 && previous_direction == DIRECTION_UP) {
         elevio_motorDirection(DIRN_DOWN);
         current_direction = DIRECTION_DOWN;
-        next_stop = newest_floor_position + 1;
+        next_stop = last_floor_position + 1;
     }
-    if (next_stop == newest_floor_position && current_position == -1 && previous_direction == DIRECTION_DOWN) {
+    if (next_stop == last_floor_position && current_position == -1 && previous_direction == DIRECTION_DOWN) {
         elevio_motorDirection(DIRN_UP);
         current_direction = DIRECTION_UP;
-        next_stop = newest_floor_position - 1;
+        next_stop = last_floor_position - 1;
     }
-
-    //LAGT til av oskar for å løse problem 1
     
 
 }
 
-//finner retningen 
+
 void fsm_find_directon()
 {
-    next_stop = queue_find_entry();
-    if (next_stop > newest_floor_position)
+    next_stop = queue_get_floor();
+    if (next_stop > last_floor_position)
     {
         current_direction = DIRECTION_UP;
     }
-    if (next_stop < newest_floor_position) 
+    if (next_stop < last_floor_position) 
     {
         current_direction = DIRECTION_DOWN;
     }
-    if (next_stop == newest_floor_position)
+    if (next_stop == last_floor_position)
     {
-        current_direction = DIRECTION_TBT;
+        current_direction = DIRECTION_NONE;
     }
 }
 
-void fsm_search_beyond_next_stop()
+void fsm_set_next_stop()
 {
-    // hvis direction oppover, lop fra next_stop  og oppver, leter etter nedover-pil og kryss
     if (current_direction == DIRECTION_UP)
     {
-        for (int f = next_stop + 1; f < NUMBER_OF_FLOORS; ++f)
+        for (int f = next_stop + 1; f < N_FLOORS; ++f)
         {
 
             if (queue[f][1] == 1)
-            { // funnet en down
+            { 
                 next_stop = f;
             }
             if (queue[f][2] == 1)
-            { // funnet en kryss
+            { 
                 next_stop = f;
             }
         }
-
-        // hvis direction nedover, loop fra next_stop og nedover, leter etter oppover-pil og kryss
 
         if (current_direction == DIRECTION_DOWN)
         {
             for (int f = 0; f < next_stop; ++f)
             {
                 if (queue[f][0] == 1)
-                { // funnet en up
+                { 
                     next_stop = f;
                 }
 
                 if (queue[f][2] == 1)
-                { // funnet en kryss
+                { 
                     next_stop = f;
                 }
             }
@@ -134,14 +108,15 @@ void fsm_search_beyond_next_stop()
 
 int fsm_valid_stop()
 {
-    if ((queue[newest_floor_position][current_direction] == 1 || queue[newest_floor_position][2] == 1) && current_position != -1)
+    for(int b = 0; b < N_BUTTONS; b++){
+        if (queue[last_floor_position][b] == 1 && current_position != -1)
     {
         return 1;
+    }
     }
     return 0;
 }
 
-// Main run fsm_search_beyond_next_stop
 
 
 void fsm_run()
@@ -169,22 +144,19 @@ void fsm_run()
 
     printf("%d\n", next_stop);
 
-    // Updates for every run of loop
-    fsm_update_floor_position(); // updated {current_position, newest_floor_position, previous_floor_position}
-    
-    //printf("Current newest flore: %d\n",newest_floor_position);
+    fsm_update_current_floor(); 
 
     switch (current_state)
     {
 
 
     case (INIT):
-        set_initial_condition();
+        queue_set_initial_condition();
         current_state = DOOR_OPEN;
         break;
 
     case (IDLE):
-        add_order();
+        queue_add_order();
         order_light(); 
         elevio_stopLamp(0);
 
@@ -205,26 +177,22 @@ void fsm_run()
 
     case (MOVING):
 
-        add_order();
+        queue_add_order();
         
-        // Hvis ikke er bestemt
-        if (current_direction == DIRECTION_TBT)
+        if (current_direction == DIRECTION_NONE)
         {
-            fsm_find_directon(); // gir også "første next_stop"
+            fsm_find_directon(); 
         }
 
-        // Hvis vi er der vi skal være(ende stop) (et ende stelevio_stopButtonopp, vurdering å sette direction til Undetirmand)
         
-        if (newest_floor_position == next_stop && current_position != -1) //lagt til en && av oskar
+        if (last_floor_position == next_stop && current_position != -1) 
         {
             current_state = DOOR_OPEN;
-            current_direction = DIRECTION_TBT;
+            current_direction = DIRECTION_NONE;
         }
 
-        // hvis bestilling over - motsatt retning eller kryss, oppdater next_stop
-        fsm_search_beyond_next_stop();
+        fsm_set_next_stop();
 
-        // Hvis bestilling inni samme retning.-> newest_floor_position har et kryss i kømatrisen eller retning retning samme retning- Kast opp
 
         if (fsm_valid_stop())
         {
@@ -238,26 +206,22 @@ void fsm_run()
         fsm_go_to(next_stop);
 
 
-       
-        
-
         if(elevio_stopButton()){
             current_state = EMERGENCY_STOP;
             previous_direction = current_direction;
-            current_direction = DIRECTION_TBT;
+            current_direction = DIRECTION_NONE;
         }
 
         break;
 
     case (DOOR_OPEN):
-        add_order();
+        queue_add_order();
         order_light();
 
         elevio_motorDirection(DIRN_STOP);
         
         int f = elevio_floorSensor();
-        delete_order(f);
-        delete_light(f);
+        queue_delete_order(f);
             
         if(elevio_stopButton()){
             current_state = EMERGENCY_STOP;
@@ -271,16 +235,14 @@ void fsm_run()
             current_state = IDLE;
         }
 
-        
-    
         timer_start();
         break;
         
     
     case(EMERGENCY_STOP):
         elevio_motorDirection(DIRN_STOP);
-        delete_all_orders();
-        delete_all_lights();   
+        queue_delete_all_orders();
+  
         
         while(elevio_stopButton()){
             elevio_stopLamp(1);
@@ -288,6 +250,7 @@ void fsm_run()
                 elevio_doorOpenLamp(1);
             }
         }
+        elevio_stopLamp(0);
 
         if(elevio_floorSensor() != -1)
         {
@@ -300,10 +263,9 @@ void fsm_run()
 
     case(OBSTRUCTION):
         while(elevio_obstruction()){
-            add_order();
+            queue_add_order();
             order_light();
             elevio_doorOpenLamp(1);
-            elevio_stopLamp(0);
         }
         
         if(!elevio_obstruction())

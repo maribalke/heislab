@@ -1,3 +1,14 @@
+/**
+ * @file fsm.h
+ * 
+ * @author Hermine Alfsen, Mari Balke Fjellang
+ * @brief Finite state machine and other functions 
+ * @version 0.1
+ * @date 2022-03-08
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,70 +19,52 @@
 
 typedef enum {INIT, IDLE, MOVING, DOOR_OPEN, EMERGENCY_STOP, OBSTRUCTION} state;
 
-typedef enum {DIRECTION_UP, DIRECTION_DOWN, DIRECTION_TBT} direction; //Trenger vi TBT
+typedef enum {DIRECTION_UP, DIRECTION_DOWN, DIRECTION_NONE} direction; 
 
 typedef enum {unknown = -1, first = 0, second = 1, third = 2, fourth = 3} position;
 
-typedef struct
-{
-    position start;
-    position stop;
-    position next_stop;
 
-} movement;
-
-
-extern state current_state;
-
-extern direction current_direction;
-
-extern direction previous_direction;
-
-
-void fsm_search_beyond_next_stop();
-
-int fsm_valid_stop();
-
-void elevator_direction();
-
-void fsm_find_directon();
 
 /**
- * @brief Initilize the elevator to a known state
+ * @brief Updates the new floor position as the elevator is located at a floor. The previous value is stored.
  * 
  */
-void set_initial_condition(); //definerer start tilstand
-
-/**
- * @brief Function that updates the last passed floor
- * 
- * 
- * 
- */
-void set_current_floor(int* current_floor);
-
-
-void fsm_update_light();
-
+void fsm_update_current_floor();
 
 
 /**
- * @brief Elevator goes to floor and stops
+ * @brief Checks whether the next_stop-position is above or below the current position and sets the 
+ * correct direction
  * 
  * @param next_stop 
- * @param floor_indicator 
  */
 void fsm_go_to(int next_stop);
 
 
-//int fsm_is_emergancy();
+/**
+ * @brief Finds the next direction based on the buttons pressed if the elevator has no previous direction.
+ * 
+ */
+void fsm_find_directon();
 
 
 /**
- * @brief Runs the whole elevator
+ * @brief Checks whether the elevator should stop at the floor where a button is pressed. 
+ * @param next_stop is set to a floor if the if-statements are true
+ */
+void fsm_set_next_stop();
+
+
+/**
+ * @brief Checks whether the elevator is allowed to stop
+ * @return 1 if success, 0 if the stop is not valid 
  * 
+ */
+int fsm_valid_stop();
+
+
+/**
+ * @brief Runs the elevator
  */
 void fsm_run();
 
-
-//Helper functions

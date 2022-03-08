@@ -1,0 +1,166 @@
+\hypertarget{fsm_8h}{}\doxysection{source/fsm.h File Reference}
+\label{fsm_8h}\index{source/fsm.h@{source/fsm.h}}
+
+
+Finite state machine and other functions.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}driver/elevio.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}queue.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}light.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}timer.\+h\char`\"{}}\newline
+Include dependency graph for fsm.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{fsm_8h_adc6e5733fc3c22f0a7b2914188c49c90}\label{fsm_8h_adc6e5733fc3c22f0a7b2914188c49c90}} 
+enum {\bfseries state} \{ \newline
+{\bfseries I\+N\+IT}, 
+{\bfseries I\+D\+LE}, 
+{\bfseries M\+O\+V\+I\+NG}, 
+{\bfseries D\+O\+O\+R\+\_\+\+O\+P\+EN}, 
+\newline
+{\bfseries E\+M\+E\+R\+G\+E\+N\+C\+Y\+\_\+\+S\+T\+OP}, 
+{\bfseries O\+B\+S\+T\+R\+U\+C\+T\+I\+ON}
+ \}
+\item 
+\mbox{\Hypertarget{fsm_8h_a99f26e6ee9fcd62f75203b5402df8098}\label{fsm_8h_a99f26e6ee9fcd62f75203b5402df8098}} 
+enum {\bfseries direction} \{ {\bfseries D\+I\+R\+E\+C\+T\+I\+O\+N\+\_\+\+UP}, 
+{\bfseries D\+I\+R\+E\+C\+T\+I\+O\+N\+\_\+\+D\+O\+WN}, 
+{\bfseries D\+I\+R\+E\+C\+T\+I\+O\+N\+\_\+\+N\+O\+NE}
+ \}
+\item 
+\mbox{\Hypertarget{fsm_8h_a7130b1618285588513fd1ff97884b9d9}\label{fsm_8h_a7130b1618285588513fd1ff97884b9d9}} 
+enum {\bfseries position} \{ \newline
+{\bfseries unknown} = -\/1, 
+{\bfseries first} = 0, 
+{\bfseries second} = 1, 
+{\bfseries third} = 2, 
+\newline
+{\bfseries fourth} = 3
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{fsm_8h_aa13d5b8ee629c39a9e284cfd31ea04ee}{fsm\+\_\+update\+\_\+current\+\_\+floor}} ()
+\begin{DoxyCompactList}\small\item\em Updates the new floor position as the elevator is located at a floor. The previous value is stored. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{fsm_8h_a3c97792b0fc275f48c81c8a99e6ed735}{fsm\+\_\+go\+\_\+to}} (int next\+\_\+stop)
+\begin{DoxyCompactList}\small\item\em Checks whether the next\+\_\+stop-\/position is above or below the current position and sets the correct direction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{fsm_8h_accea2710abf030f6cb9dad6e74a12d61}{fsm\+\_\+find\+\_\+directon}} ()
+\begin{DoxyCompactList}\small\item\em Finds the next direction based on the buttons pressed if the elevator has no previous direction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{fsm_8h_a79ff01e21ff5a0a9317db5bd0859cb98}{fsm\+\_\+set\+\_\+next\+\_\+stop}} ()
+\begin{DoxyCompactList}\small\item\em Checks whether the elevator should stop at the floor where a button is pressed. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{fsm_8h_a40a973641d7170de569a5bb1692e3204}{fsm\+\_\+valid\+\_\+stop}} ()
+\begin{DoxyCompactList}\small\item\em Checks whether the elevator is allowed to stop. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{fsm_8h_ae40f1570ae9205565011ed1219101a53}\label{fsm_8h_ae40f1570ae9205565011ed1219101a53}} 
+void \mbox{\hyperlink{fsm_8h_ae40f1570ae9205565011ed1219101a53}{fsm\+\_\+run}} ()
+\begin{DoxyCompactList}\small\item\em Runs the elevator. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Finite state machine and other functions. 
+
+\begin{DoxyAuthor}{Author}
+Hermine Alfsen, Mari Balke Fjellang 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2022-\/03-\/08
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2022 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{fsm_8h_accea2710abf030f6cb9dad6e74a12d61}\label{fsm_8h_accea2710abf030f6cb9dad6e74a12d61}} 
+\index{fsm.h@{fsm.h}!fsm\_find\_directon@{fsm\_find\_directon}}
+\index{fsm\_find\_directon@{fsm\_find\_directon}!fsm.h@{fsm.h}}
+\doxysubsubsection{\texorpdfstring{fsm\_find\_directon()}{fsm\_find\_directon()}}
+{\footnotesize\ttfamily void fsm\+\_\+find\+\_\+directon (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Finds the next direction based on the buttons pressed if the elevator has no previous direction. 
+
+
+
+Definition at line 57 of file fsm.\+c.
+
+\mbox{\Hypertarget{fsm_8h_a3c97792b0fc275f48c81c8a99e6ed735}\label{fsm_8h_a3c97792b0fc275f48c81c8a99e6ed735}} 
+\index{fsm.h@{fsm.h}!fsm\_go\_to@{fsm\_go\_to}}
+\index{fsm\_go\_to@{fsm\_go\_to}!fsm.h@{fsm.h}}
+\doxysubsubsection{\texorpdfstring{fsm\_go\_to()}{fsm\_go\_to()}}
+{\footnotesize\ttfamily void fsm\+\_\+go\+\_\+to (\begin{DoxyParamCaption}\item[{int}]{next\+\_\+stop }\end{DoxyParamCaption})}
+
+
+
+Checks whether the next\+\_\+stop-\/position is above or below the current position and sets the correct direction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em next\+\_\+stop} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 31 of file fsm.\+c.
+
+\mbox{\Hypertarget{fsm_8h_a79ff01e21ff5a0a9317db5bd0859cb98}\label{fsm_8h_a79ff01e21ff5a0a9317db5bd0859cb98}} 
+\index{fsm.h@{fsm.h}!fsm\_set\_next\_stop@{fsm\_set\_next\_stop}}
+\index{fsm\_set\_next\_stop@{fsm\_set\_next\_stop}!fsm.h@{fsm.h}}
+\doxysubsubsection{\texorpdfstring{fsm\_set\_next\_stop()}{fsm\_set\_next\_stop()}}
+{\footnotesize\ttfamily void fsm\+\_\+set\+\_\+next\+\_\+stop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Checks whether the elevator should stop at the floor where a button is pressed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em next\+\_\+stop} & is set to a floor if the if-\/statements are true \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 74 of file fsm.\+c.
+
+\mbox{\Hypertarget{fsm_8h_aa13d5b8ee629c39a9e284cfd31ea04ee}\label{fsm_8h_aa13d5b8ee629c39a9e284cfd31ea04ee}} 
+\index{fsm.h@{fsm.h}!fsm\_update\_current\_floor@{fsm\_update\_current\_floor}}
+\index{fsm\_update\_current\_floor@{fsm\_update\_current\_floor}!fsm.h@{fsm.h}}
+\doxysubsubsection{\texorpdfstring{fsm\_update\_current\_floor()}{fsm\_update\_current\_floor()}}
+{\footnotesize\ttfamily void fsm\+\_\+update\+\_\+current\+\_\+floor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Updates the new floor position as the elevator is located at a floor. The previous value is stored. 
+
+
+
+Definition at line 19 of file fsm.\+c.
+
+\mbox{\Hypertarget{fsm_8h_a40a973641d7170de569a5bb1692e3204}\label{fsm_8h_a40a973641d7170de569a5bb1692e3204}} 
+\index{fsm.h@{fsm.h}!fsm\_valid\_stop@{fsm\_valid\_stop}}
+\index{fsm\_valid\_stop@{fsm\_valid\_stop}!fsm.h@{fsm.h}}
+\doxysubsubsection{\texorpdfstring{fsm\_valid\_stop()}{fsm\_valid\_stop()}}
+{\footnotesize\ttfamily int fsm\+\_\+valid\+\_\+stop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Checks whether the elevator is allowed to stop. 
+
+\begin{DoxyReturn}{Returns}
+1 if success, 0 if the stop is not valid 
+\end{DoxyReturn}
+
+
+Definition at line 109 of file fsm.\+c.
+
