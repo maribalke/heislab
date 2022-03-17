@@ -14,9 +14,10 @@ int main(){
     while(1){
 
         int floor = elevio_floorSensor();
-        floor_light(floor);
+        if(floor != -1){
+            elevio_floorIndicator(floor);
+        }
         
-
         fsm_run();
         
         
