@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Heislab, Hermine og Mari: source/main.c Source File</title>
+<title>Heislab - Mari og Hermine: source/main.c Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Heislab, Hermine og Mari
+   <div id="projectname">Heislab - Mari og Hermine
    </div>
   </td>
  </tr>
@@ -85,19 +85,19 @@ $(function() {
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordflow">while</span>(1){</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keywordtype">int</span> floor = elevio_floorSensor();</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <a class="code" href="light_8h.html#a10d336e50ec017462aa6d574ac73bbf9">floor_light</a>(floor);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <a class="code" href="fsm_8h.html#ae40f1570ae9205565011ed1219101a53">fsm_run</a>();</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordflow">if</span>(floor != -1){</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;            elevio_floorIndicator(floor);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        }</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <a class="code" href="fsm_8h.html#ae40f1570ae9205565011ed1219101a53">fsm_run</a>();</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        nanosleep(&amp;(<span class="keyword">struct</span> timespec){0, 20*1000*1000}, NULL);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    }</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}   </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        nanosleep(&amp;(<span class="keyword">struct</span> timespec){0, 20*1000*1000}, NULL);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    }</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;}   </div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="afsm_8h_html_ae40f1570ae9205565011ed1219101a53"><div class="ttname"><a href="fsm_8h.html#ae40f1570ae9205565011ed1219101a53">fsm_run</a></div><div class="ttdeci">void fsm_run()</div><div class="ttdoc">Runs the elevator.</div><div class="ttdef"><b>Definition:</b> <a href="fsm_8c_source.html#l00122">fsm.c:122</a></div></div>
-<div class="ttc" id="alight_8h_html_a10d336e50ec017462aa6d574ac73bbf9"><div class="ttname"><a href="light_8h.html#a10d336e50ec017462aa6d574ac73bbf9">floor_light</a></div><div class="ttdeci">void floor_light(int floor)</div><div class="ttdoc">Updates floor lights.</div><div class="ttdef"><b>Definition:</b> <a href="light_8c_source.html#l00004">light.c:4</a></div></div>
 <div class="ttc" id="afsm_8h_html"><div class="ttname"><a href="fsm_8h.html">fsm.h</a></div><div class="ttdoc">Finite state machine and other functions.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

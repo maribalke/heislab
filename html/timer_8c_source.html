@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Heislab, Hermine og Mari: source/timer.c Source File</title>
+<title>Heislab - Mari og Hermine: source/timer.c Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Heislab, Hermine og Mari
+   <div id="projectname">Heislab - Mari og Hermine
    </div>
   </td>
  </tr>
@@ -75,18 +75,18 @@ $(function() {
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#define TIME_LIMIT 3</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> doorTimer = -1;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> door_timer = -1;</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="timer_8h.html#a161432848a326da3a1ea7765fc2bc023">   10</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="timer_8h.html#a161432848a326da3a1ea7765fc2bc023">timer_start</a>() {</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    doorTimer = time(NULL);</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    door_timer = time(NULL);</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    elevio_doorOpenLamp(1);</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;}</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="timer_8h.html#aa407a36b99e4dd9072e1fb40c1d793d0">   16</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="timer_8h.html#aa407a36b99e4dd9072e1fb40c1d793d0">timer_expired</a>() {</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">if</span> (doorTimer == -1) <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">return</span> (time(NULL) - doorTimer &gt; TIME_LIMIT);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">if</span> (door_timer == -1) <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">return</span> (time(NULL) - door_timer &gt; TIME_LIMIT);</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="atimer_8h_html_a161432848a326da3a1ea7765fc2bc023"><div class="ttname"><a href="timer_8h.html#a161432848a326da3a1ea7765fc2bc023">timer_start</a></div><div class="ttdeci">void timer_start()</div><div class="ttdoc">Starts the timer.</div><div class="ttdef"><b>Definition:</b> <a href="timer_8c_source.html#l00010">timer.c:10</a></div></div>

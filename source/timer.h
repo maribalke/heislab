@@ -1,7 +1,7 @@
 /**
  * @file timer.h
  * @author Hermine Alfsen, Mari Balke Fjellang
- * @brief 
+ * @brief functions to control the timer
  * @version 0.1
  * @date 2022-03-08
  * 

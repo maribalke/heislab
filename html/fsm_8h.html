@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Heislab, Hermine og Mari: source/fsm.h File Reference</title>
+<title>Heislab - Mari og Hermine: source/fsm.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Heislab, Hermine og Mari
+   <div id="projectname">Heislab - Mari og Hermine
    </div>
   </td>
  </tr>
@@ -79,7 +79,6 @@ $(function() {
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &quot;driver/elevio.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="queue_8h_source.html">queue.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="light_8h_source.html">light.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="timer_8h_source.html">timer.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for fsm.h:</div>
@@ -125,9 +124,9 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aa13d5b8ee629c39a9e284cfd31ea04ee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fsm_8h.html#aa13d5b8ee629c39a9e284cfd31ea04ee">fsm_update_current_floor</a> ()</td></tr>
-<tr class="memdesc:aa13d5b8ee629c39a9e284cfd31ea04ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the new floor position as the elevator is located at a floor. The previous value is stored.  <a href="fsm_8h.html#aa13d5b8ee629c39a9e284cfd31ea04ee">More...</a><br /></td></tr>
-<tr class="separator:aa13d5b8ee629c39a9e284cfd31ea04ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a907b635dcb1b128904b03cb9f4692c97"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fsm_8h.html#a907b635dcb1b128904b03cb9f4692c97">fsm_update_last_floor</a> ()</td></tr>
+<tr class="memdesc:a907b635dcb1b128904b03cb9f4692c97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the new floor position as the elevator is located at a floor. The previous value is stored.  <a href="fsm_8h.html#a907b635dcb1b128904b03cb9f4692c97">More...</a><br /></td></tr>
+<tr class="separator:a907b635dcb1b128904b03cb9f4692c97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c97792b0fc275f48c81c8a99e6ed735"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fsm_8h.html#a3c97792b0fc275f48c81c8a99e6ed735">fsm_go_to</a> (int next_stop)</td></tr>
 <tr class="memdesc:a3c97792b0fc275f48c81c8a99e6ed735"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the next_stop-position is above or below the current position and sets the correct direction.  <a href="fsm_8h.html#a3c97792b0fc275f48c81c8a99e6ed735">More...</a><br /></td></tr>
 <tr class="separator:a3c97792b0fc275f48c81c8a99e6ed735"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -230,14 +229,14 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fsm_
 
 </div>
 </div>
-<a id="aa13d5b8ee629c39a9e284cfd31ea04ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa13d5b8ee629c39a9e284cfd31ea04ee">&#9670;&nbsp;</a></span>fsm_update_current_floor()</h2>
+<a id="a907b635dcb1b128904b03cb9f4692c97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a907b635dcb1b128904b03cb9f4692c97">&#9670;&nbsp;</a></span>fsm_update_last_floor()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void fsm_update_current_floor </td>
+          <td class="memname">void fsm_update_last_floor </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>

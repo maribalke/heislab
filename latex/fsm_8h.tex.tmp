@@ -9,7 +9,6 @@ Finite state machine and other functions.
 {\ttfamily \#include $<$stdlib.\+h$>$}\newline
 {\ttfamily \#include \char`\"{}driver/elevio.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}queue.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}light.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}timer.\+h\char`\"{}}\newline
 Include dependency graph for fsm.\+h\+:
 % FIG 0
@@ -48,7 +47,7 @@ enum {\bfseries position} \{ \newline
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{fsm_8h_aa13d5b8ee629c39a9e284cfd31ea04ee}{fsm\+\_\+update\+\_\+current\+\_\+floor}} ()
+void \mbox{\hyperlink{fsm_8h_a907b635dcb1b128904b03cb9f4692c97}{fsm\+\_\+update\+\_\+last\+\_\+floor}} ()
 \begin{DoxyCompactList}\small\item\em Updates the new floor position as the elevator is located at a floor. The previous value is stored. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{fsm_8h_a3c97792b0fc275f48c81c8a99e6ed735}{fsm\+\_\+go\+\_\+to}} (int next\+\_\+stop)
 \begin{DoxyCompactList}\small\item\em Checks whether the next\+\_\+stop-\/position is above or below the current position and sets the correct direction. \end{DoxyCompactList}\item 
@@ -133,11 +132,11 @@ Checks whether the elevator should stop at the floor where a button is pressed.
 
 Definition at line 74 of file fsm.\+c.
 
-\mbox{\Hypertarget{fsm_8h_aa13d5b8ee629c39a9e284cfd31ea04ee}\label{fsm_8h_aa13d5b8ee629c39a9e284cfd31ea04ee}} 
-\index{fsm.h@{fsm.h}!fsm\_update\_current\_floor@{fsm\_update\_current\_floor}}
-\index{fsm\_update\_current\_floor@{fsm\_update\_current\_floor}!fsm.h@{fsm.h}}
-\doxysubsubsection{\texorpdfstring{fsm\_update\_current\_floor()}{fsm\_update\_current\_floor()}}
-{\footnotesize\ttfamily void fsm\+\_\+update\+\_\+current\+\_\+floor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+\mbox{\Hypertarget{fsm_8h_a907b635dcb1b128904b03cb9f4692c97}\label{fsm_8h_a907b635dcb1b128904b03cb9f4692c97}} 
+\index{fsm.h@{fsm.h}!fsm\_update\_last\_floor@{fsm\_update\_last\_floor}}
+\index{fsm\_update\_last\_floor@{fsm\_update\_last\_floor}!fsm.h@{fsm.h}}
+\doxysubsubsection{\texorpdfstring{fsm\_update\_last\_floor()}{fsm\_update\_last\_floor()}}
+{\footnotesize\ttfamily void fsm\+\_\+update\+\_\+last\+\_\+floor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 
 

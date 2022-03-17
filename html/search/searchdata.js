@@ -1,8 +1,8 @@
 var indexSectionsWithContent =
 {
-  0: "fhloqt",
-  1: "flqt",
-  2: "foqt",
+  0: "fhqt",
+  1: "fqt",
+  2: "fqt",
   3: "q",
   4: "h"
 };
