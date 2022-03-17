@@ -121,29 +121,6 @@ int fsm_valid_stop()
 
 void fsm_run()
 {
-    
-    if (current_direction == DIRECTION_DOWN) {
-        printf("GOING DOWN");
-    }
-    if (current_direction == DIRECTION_UP) {
-        printf("GOING UP");
-    }
-    if (current_state == IDLE) {
-        printf("IDLE");
-    }
-    if (current_state == MOVING) {
-        printf("MOVING");
-    }
-    if (current_state == DOOR_OPEN) {
-        printf("DOOR OPEN");
-    }
-    if (current_state == EMERGENCY_STOP) {
-        printf("EMERGENCY_STOP");
-    }
-    
-
-    printf("%d\n", next_stop);
-
     fsm_update_last_floor(); 
 
     switch (current_state)
@@ -157,7 +134,6 @@ void fsm_run()
 
     case (IDLE):
         queue_add_order();
-        order_light(); 
         elevio_stopLamp(0);
 
         if(elevio_stopButton()){
@@ -176,7 +152,6 @@ void fsm_run()
         break;
 
     case (MOVING):
-
         queue_add_order();
         
         if (current_direction == DIRECTION_NONE)
@@ -216,7 +191,6 @@ void fsm_run()
 
     case (DOOR_OPEN):
         queue_add_order();
-        order_light();
 
         elevio_motorDirection(DIRN_STOP);
         
@@ -264,7 +238,6 @@ void fsm_run()
     case(OBSTRUCTION):
         while(elevio_obstruction()){
             queue_add_order();
-            order_light();
             elevio_doorOpenLamp(1);
         }
         
