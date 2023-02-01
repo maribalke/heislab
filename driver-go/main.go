@@ -1,4 +1,5 @@
 package main
+// bruk package main på alle filer og bare legg til filene
 
 import (
 	"Driver-go/elevio"
@@ -25,6 +26,7 @@ func main() {
 	go elevio.PollObstructionSwitch(drv_obstr)
 	go elevio.PollStopButton(drv_stop)
 
+	// gjør om dette til egen go
 	for {
 		select {
 		case a := <-drv_buttons:
