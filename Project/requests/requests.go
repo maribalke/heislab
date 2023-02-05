@@ -107,3 +107,20 @@ func ChooseDirection(e fsm.Elevator) dirnBehaviourPair {
 	default: return dirnBehaviourPair {elevio.MD_Stop,elevio.EB_Idle}
 	}
 }
+
+func ShouldStop(e fsm.Elevator) int{
+	switch e.Dirn {
+	case elevio.MD_Down:
+		return e.Requests[e.Floor][elevio.BT_HallDown] ||
+				e.Requests[e.Floor][elevio.BT_Cab] ||
+				!requests_Below(e)
+	
+	case elevio.MD_Up:
+		return e.Requests[e.Floor][elevio.BT_HallUp] ||
+			e.Requests[e.Floor][elevio.BT_Cab] ||
+			!requests_Above(e)
+	case elevio.MD_Stop:
+	default:
+		return 1
+	}
+}
