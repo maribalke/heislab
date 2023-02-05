@@ -17,22 +17,22 @@ func onRequestButtonPress(f int, b elevio.ButtonType) {
 		} else {
 			e.Requests[f][b] = 1}
 
-		case EB_Moving:
+	case EB_Moving:
 			e.Requests[f][b] = 1
 
-		case EB_Idle:
+	case EB_Idle:
 			e.Requests[f][b] = 1
 			pair := requests.ChooseDirection(e)
 			e.dirn = pair.dirn
 			e.behaviour = pair.behaviour
 
-			switch pair.behaviour {
+		switch pair.behaviour {
 			case EB_DoorOpen:
-				elevio.SetDoorOpenLamp(1) // la inn timer i denne, må testes
+				elevio.SetDoorOpenLamp(true) // la inn timer i denne, må testes
 				e = requests.ClearAtCurrentFloor(e)
 
 			case EB_Moving:
-				elevio.SetMotorDirection(e.dirn) // OBS forstår ikke hva som skal gjøres her, spør studass
+				elevio.SetMotorDirection(e.dirn) 
 			
 			case EB_Idle:
 				break
@@ -58,7 +58,7 @@ func OnFloorArrival(newFloor int) {
 	}
 }
 
-func fsm(newButtonPressChan <-chan elevio.ButtonEvent, floorSensorChan <-chan int){ // legg til timer etterhvert
+func StateMachine(newButtonPressChan <-chan elevio.ButtonEvent, floorSensorChan <-chan int, obstruction <-chan bool, stop <-chan bool,d elevio.MotorDirection){ // legg til timer etterhvert
 	// elevator := elevio.Elevator
 	for {
 		select{
@@ -71,10 +71,25 @@ func fsm(newButtonPressChan <-chan elevio.ButtonEvent, floorSensorChan <-chan in
 				OnFloorArrival(newFloor)
 			}
 			prev = newFloor
-		
-		case 
 				
-
+		case obstr := <-obstruction:
+			if obstr {
+				elevio.SetMotorDirection(elevio.MD_Stop)
+			} else {
+				elevio.SetMotorDirection(d)
+			}
+		
+		case s := <-stop:
+			if s {
+				elevio.SetStopLamp(true)
+				elevio.SetMotorDirection(elevio.MD_Stop)
+				for f := 0; f < elevio.NUM_FLOORS; f++ {
+					for b := elevio.ButtonType(0); b < 3; b++ {
+						elevio.SetButtonLamp(b, f, false)
+					}
+				}
+				
+			}
 		}
 	}
 }

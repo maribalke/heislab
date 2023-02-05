@@ -3,7 +3,7 @@ package main
 
 import (
 	"fmt"
-    //"fsm"
+    "fsm"
 	"Project/elevio")
 
 
@@ -25,8 +25,8 @@ func main() {
 	go elevio.PollFloorSensor(drv_floors)
 	go elevio.PollObstructionSwitch(drv_obstr)
 	go elevio.PollStopButton(drv_stop)
-	go elevio.Inputs(drv_buttons, drv_floors, drv_obstr, drv_stop, d)
-	// go på fsm
+	//go elevio.Inputs(drv_buttons, drv_floors, drv_obstr, drv_stop, d)
+	go fsm.StateMachine(drv_buttons,drv_floors,drv_obstr, drv_stop, d)
 
 
 
