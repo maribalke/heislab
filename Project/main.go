@@ -1,11 +1,11 @@
 package main
+
 // bruk package main på alle filer og bare legg til filene
 
 import (
-	"fmt"
-    "fsm"
-	"Project/elevio")
-
+	"Project/elevio"
+	"Project/requests"
+)
 
 func main() {
 
@@ -25,12 +25,39 @@ func main() {
 	go elevio.PollFloorSensor(drv_floors)
 	go elevio.PollObstructionSwitch(drv_obstr)
 	go elevio.PollStopButton(drv_stop)
-	//go elevio.Inputs(drv_buttons, drv_floors, drv_obstr, drv_stop, d)
-	go fsm.StateMachine(drv_buttons,drv_floors,drv_obstr, drv_stop, d)
+	
 
+	for {
+		select {
+		case newButtonPress := <- drv_buttons:
+			requests.OnRequestButtonPress(newButtonPress.Floor, newButtonPress.Button)
 
+		case newFloor := <- drv_floors:
+			prev := -1
+			if newFloor != -1 && newFloor != prev { // blir ikke dette dobbelt opp av samme spørsmål?
+				requests.OnFloorArrival(newFloor)
+			}
+			prev = newFloor
+
+		case obstr := <- drv_obstr:
+			if obstr {
+				elevio.SetMotorDirection(elevio.MD_Stop)
+			} else {
+				elevio.SetMotorDirection(d)
+			}
+
+		case s := <- drv_stop:
+			if s {
+				elevio.SetStopLamp(true)
+				elevio.SetMotorDirection(elevio.MD_Stop)
+				for f := 0; f < elevio.NUM_FLOORS; f++ {
+					for b := elevio.ButtonType(0); b < 3; b++ {
+						elevio.SetButtonLamp(b, f, false)
+					}
+				}
+
+			}
+		}
+	}
 
 }
-
-
-

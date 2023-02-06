@@ -85,12 +85,6 @@ func PollButtons(receiver chan<- ButtonEvent) {
 				v := GetButton(b, f)
 				if v != prev[f][b] && v != false {
 					receiver <- ButtonEvent{f, ButtonType(b)}
-				}SetStopLamp(true)
-				SetMotorDirection(MD_Stop)
-				for f := 0; f < NUM_FLOORS; f++ {
-					for b := ButtonType(0); b < 3; b++ {
-						SetButtonLamp(b, f, false)
-					}
 				}
 				prev[f][b] = v
 			}
@@ -202,36 +196,3 @@ func toBool(a byte) bool {
 	return b
 }
 
-// func Inputs(drv_buttons <-chan ButtonEvent, drv_floors <-chan int, drv_obstr <-chan bool, drv_stop <-chan bool, d MotorDirection) {
-// 	for {
-// 		select {
-// 		case a := <-drv_buttons:
-// 			fmt.Printf("%+v\n", a)
-// 			SetButtonLamp(a.Button, a.Floor, true)
-            
-
-// 		case a := <-drv_floors:
-// 			fmt.Printf("%+v\n", a)
-//             SetFloorIndicator(a)
-			
-
-// 		case a := <-drv_obstr:
-// 			fmt.Printf("%+v\n", a)
-// 			if a {
-// 				SetMotorDirection(MD_Stop)
-// 			} else {
-// 				SetMotorDirection(d)
-// 			}
-
-// 		case a := <-drv_stop:
-// 			fmt.Printf("%+v\n", a)
-//             SetStopLamp(true)
-//             SetMotorDirection(MD_Stop)
-// 			for f := 0; f < NUM_FLOORS; f++ {
-// 				for b := ButtonType(0); b < 3; b++ {
-// 					SetButtonLamp(b, f, false)
-// 				}
-// 			}
-// 		}
-// 		}
-// 	}
