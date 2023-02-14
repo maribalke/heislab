@@ -68,8 +68,9 @@ func SetFloorIndicator(floor int) {
 
 func SetDoorOpenLamp(value bool) {
 	write([4]byte{4, toByte(value), 0, 0})
-	timer:= time.NewTimer(3*time.Second) // vi satt inn timer
-	<-timer.C
+	//timer:= time.NewTimer(3*time.Second) // vi satt inn timer
+	//<-timer.C
+	//print("timer out\n")
 }
 
 func SetStopLamp(value bool) {

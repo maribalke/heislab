@@ -1,12 +1,10 @@
 package requests
 
-import (
-	"Project/elevio"
-)
 
-func OnRequestButtonPress(f int, b elevio.ButtonType) {
+
+/*func OnRequestButtonPress(f int, b elevio.ButtonType) {
 	var e Elevator //spør
-
+	
 	switch e.Behaviour { //ElevatorBehaviour.Behaviour
 
 	case EB_DoorOpen:
@@ -18,11 +16,13 @@ func OnRequestButtonPress(f int, b elevio.ButtonType) {
 		}
 
 	case EB_Moving:
+		print("moving")
 		e.Requests[f][b] = true
 
 	case EB_Idle:
 		e.Requests[f][b] = true
 		pair := ChooseDirection(e)
+		//print("tilstand ",pair.Behaviour,"\n")
 		e.Dirn = pair.Dirn
 		e.Behaviour = pair.Behaviour
 
@@ -38,14 +38,15 @@ func OnRequestButtonPress(f int, b elevio.ButtonType) {
 			break
 		}
 	}
-}
+}*/
 
-func OnFloorArrival(newFloor int) {
-	var e Elevator
+/*func OnFloorArrival(newFloor int) {
+	//print("on floor arrival\n")
+	//var e Elevator
 	e.Floor = newFloor
 
 	elevio.SetFloorIndicator(newFloor)
-
+	print("t: ",e.Behaviour,"\n")
 	switch e.Behaviour {
 	case EB_Moving:
 		if ShouldStop(e) {
@@ -56,5 +57,5 @@ func OnFloorArrival(newFloor int) {
 			e.Behaviour = EB_DoorOpen
 		}
 	}
-}
+}*/
 
