@@ -5,15 +5,16 @@ package main
 import (
 	"Project/elevio"
 	"Project/requests"
-	"fmt"
+	"Project/watchdog"
+	"log"
+	"time"
 )
 
 func main() {
 
 	numFloors := 4
 
-	elevio.Init("localhost:15657",
-		numFloors)
+	elevio.Init("localhost:15657", numFloors)
 	elevio.SetDoorOpenLamp(false)
 	elevio.SetStopLamp(false)
 
@@ -26,11 +27,16 @@ func main() {
 	drv_floors := make(chan int)
 	drv_obstr := make(chan bool)
 	drv_stop := make(chan bool)
+	//timeOut := make(chan bool, 1)
+
+	dog := watchdog.New(3 * time.Second)
 
 	go elevio.PollButtons(drv_buttons)
 	go elevio.PollFloorSensor(drv_floors)
 	go elevio.PollObstructionSwitch(drv_obstr)
 	go elevio.PollStopButton(drv_stop)
+
+	// husk å lag en chan som sørger for å gjøre ting når vi fortsatt har lagret bestillinger
 
 	for {
 		select {
@@ -39,6 +45,14 @@ func main() {
 		// set upouts:
 		// - doorLight
 
+		case <-dog.Event():
+			elevio.SetDoorOpenLamp(false)
+			elevator = requests.ClearAtCurrentFloorInCurrentDirection(elevator)
+			// setAllButtonsLights
+			elevator.Behaviour = requests.EB_Idle
+			log.Println("door closed")
+			dog.Stop()
+
 		case newButtonPress := <-drv_buttons:
 			b := newButtonPress.Button
 			f := newButtonPress.Floor
@@ -46,26 +60,19 @@ func main() {
 			switch elevator.Behaviour { //ElevatorBehaviour.Behaviour
 
 			case requests.EB_DoorOpen:
-				print("kun door open\n")
-				// clear orderMatrix
+
 				if requests.ShouldClearImmediately(elevator, f, b) {
-					//print("før sleep\n")
-					// må åpne dører i tre sek og så lukke
-					// time.Sleep(time.Duration(3) * time.Second)
-					//print("sleep over\n")
-					elevator = requests.ClearAtCurrentFloorInCurrentDirection(elevator)
-					elevio.SetDoorOpenLamp(false)
-					elevator.Behaviour = requests.EB_Idle
+					dog.Reset(3 * time.Second)
+					elevio.SetDoorOpenLamp(true)
+
+					elevator.Behaviour = requests.EB_Idle // usikker på denne
 
 				} else {
 					// set orderMatrix
 					elevator.Requests[f][b] = true
-					//print("Hei")
 				}
-
 			// set orderMatrix
 			case requests.EB_Moving:
-				print("moving")
 				elevator.Requests[f][b] = true
 
 			// set orderMatrix
@@ -73,22 +80,25 @@ func main() {
 			// set motorDirection
 			//
 			case requests.EB_Idle:
-				print("idle\n")
 				elevator.Requests[f][b] = true
 				pair := requests.ChooseDirection(elevator)
-				//print("tilstand ",pair.Behaviour,"\n")
 				elevator.Dirn = pair.Dirn
 				elevator.Behaviour = pair.Behaviour
 
+				log.Println("etter idle: ", elevator.Behaviour)
+
 				switch pair.Behaviour {
 				case requests.EB_DoorOpen:
-					print("idle så door open\n")
+					log.Println("door open")
+					go dog.Start()
 					elevio.SetDoorOpenLamp(true)
-					elevator = requests.ClearAtCurrentFloorInCurrentDirection(elevator)
 
 				case requests.EB_Moving:
 					elevio.SetMotorDirection(elevator.Dirn)
+					log.Println("elevator moving")
 
+				case requests.EB_Idle:
+					break
 				}
 			}
 
@@ -100,15 +110,17 @@ func main() {
 			elevator.Floor = newFloor
 
 			elevio.SetFloorIndicator(newFloor)
-			//print("t: ",e.Behaviour,"\n")
+
+			log.Println("passing at floor", newFloor+1)
+
 			switch elevator.Behaviour {
 			case requests.EB_Moving:
 				if requests.ShouldStop(elevator) {
+					log.Println("elevator stopped at floor")
 					elevio.SetMotorDirection(elevio.MD_Stop)
+					go dog.Start() // blir stort problem hvis dog.start ikke blir ferdig før vi kommer inn i casen på nytt
 					elevio.SetDoorOpenLamp(true)
-					elevator = requests.ClearAtCurrentFloorInCurrentDirection(elevator)
-					// setAllButtonsLights
-					elevator.Behaviour = requests.EB_DoorOpen
+
 				}
 			default:
 				break
@@ -117,16 +129,17 @@ func main() {
 		case obstr := <-drv_obstr:
 
 			if obstr {
-				fmt.Print("obstruction\n")
+				log.Println("obstruction")
 				elevio.SetMotorDirection(elevio.MD_Stop)
 			} else {
+				log.Println("obstruction is over")
 				elevio.SetMotorDirection(direction)
 			}
 
 		case stop := <-drv_stop:
 			if stop {
 				elevio.SetStopLamp(true)
-				fmt.Print("stop\n")
+				log.Println("stop")
 				elevio.SetMotorDirection(elevio.MD_Stop)
 				for f := 0; f < elevio.NUM_FLOORS; f++ {
 					for b := elevio.ButtonType(0); b < 3; b++ {

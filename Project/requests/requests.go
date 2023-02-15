@@ -88,7 +88,6 @@ func ClearAtCurrentFloorInCurrentDirection(elevator Elevator) Elevator {
 func ChooseDirection(e Elevator) dirnBehaviourPair {
 	switch e.Dirn {
 	case elevio.MD_Up:
-		print("up\n")
 		if requests_Above(e) {
 			return dirnBehaviourPair{elevio.MD_Up, EB_Moving}
 		} else if requests_here(e) {
@@ -100,7 +99,6 @@ func ChooseDirection(e Elevator) dirnBehaviourPair {
 		}
 
 	case elevio.MD_Down:
-		print("down")
 		if requests_Below(e) {
 			return dirnBehaviourPair{elevio.MD_Down, EB_Moving}
 		} else if requests_here(e) {
@@ -148,3 +146,4 @@ func ShouldStop(e Elevator) bool {
 		return true
 	}
 }
+
