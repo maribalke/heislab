@@ -14,6 +14,7 @@ var _initialized bool = false
 const NUM_FLOORS = 4
 const NUM_BUTTONS = 3
 var _numFloors = 4 //fiks dette
+var _numButtons = 3
 
 var _mtx sync.Mutex
 var _conn net.Conn

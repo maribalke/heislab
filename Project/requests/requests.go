@@ -147,3 +147,18 @@ func ShouldStop(e Elevator) bool {
 	}
 }
 
+
+
+
+// LIGHTS
+
+
+/*func ClearOrderLight(e Elevator, numFloors int, numButtons int) {
+	for f := 0; f < numFloors; f++ {
+		for b := 0; b < numButtons; b++{
+			if e.Requests[e.Floor][b] {
+				elevio.SetButtonLamp(elevio.ButtonType(b),e.Floor,false)
+			}
+		}
+	}
+}*/

@@ -13,6 +13,7 @@ import (
 func main() {
 
 	numFloors := 4
+	numButtons := 3
 
 	elevio.Init("localhost:15657", numFloors)
 	elevio.SetDoorOpenLamp(false)
@@ -27,6 +28,7 @@ func main() {
 	drv_floors := make(chan int)
 	drv_obstr := make(chan bool)
 	drv_stop := make(chan bool)
+	ch_nextOrder := make(chan bool, 1)
 	//timeOut := make(chan bool, 1)
 
 	dog := watchdog.New(3 * time.Second)
@@ -46,12 +48,20 @@ func main() {
 		// - doorLight
 
 		case <-dog.Event():
+			dog.Stop()
 			elevio.SetDoorOpenLamp(false)
 			elevator = requests.ClearAtCurrentFloorInCurrentDirection(elevator)
-			// setAllButtonsLights
 			elevator.Behaviour = requests.EB_Idle
 			log.Println("door closed")
-			dog.Stop()
+			ch_nextOrder <- true
+
+		case <-ch_nextOrder:
+			print("next order\n")
+			requests.ChooseDirection(elevator)
+			pair := requests.ChooseDirection(elevator)
+			elevator.Dirn = pair.Dirn
+			elevator.Behaviour = pair.Behaviour
+			elevio.SetMotorDirection(elevator.Dirn)
 
 		case newButtonPress := <-drv_buttons:
 			b := newButtonPress.Button
@@ -62,18 +72,22 @@ func main() {
 			case requests.EB_DoorOpen:
 
 				if requests.ShouldClearImmediately(elevator, f, b) {
-					dog.Reset(3 * time.Second)
+					print("reset")
+					go dog.Reset(3 * time.Second)
 					elevio.SetDoorOpenLamp(true)
 
-					elevator.Behaviour = requests.EB_Idle // usikker på denne
+					// elevator.Behaviour = requests.EB_Idle // usikker på denne
 
 				} else {
 					// set orderMatrix
 					elevator.Requests[f][b] = true
+					elevio.SetButtonLamp(b, f, true)
+
 				}
 			// set orderMatrix
 			case requests.EB_Moving:
 				elevator.Requests[f][b] = true
+				elevio.SetButtonLamp(b, f, true)
 
 			// set orderMatrix
 			// set doorLamp
@@ -81,6 +95,7 @@ func main() {
 			//
 			case requests.EB_Idle:
 				elevator.Requests[f][b] = true
+				elevio.SetButtonLamp(b, f, true)
 				pair := requests.ChooseDirection(elevator)
 				elevator.Dirn = pair.Dirn
 				elevator.Behaviour = pair.Behaviour
@@ -118,6 +133,16 @@ func main() {
 				if requests.ShouldStop(elevator) {
 					log.Println("elevator stopped at floor")
 					elevio.SetMotorDirection(elevio.MD_Stop)
+
+					//dette er clearOrderLight-funksjonen, må lage den som en egen funksjon
+					for f := 0; f < numFloors; f++ {
+						for b := 0; b < numButtons; b++ {
+							if elevator.Requests[elevator.Floor][b] {
+								elevio.SetButtonLamp(elevio.ButtonType(b), elevator.Floor, false)
+							}
+						}
+					}
+
 					go dog.Start() // blir stort problem hvis dog.start ikke blir ferdig før vi kommer inn i casen på nytt
 					elevio.SetDoorOpenLamp(true)
 
@@ -150,3 +175,13 @@ func main() {
 		}
 	}
 }
+
+//elevio.SetButtonLamp(elevio.BT_Cab, newFloor, false)
+
+/*if elevator.Dirn == elevio.MD_Up{
+	elevio.SetButtonLamp(elevio.BT_HallUp, newFloor, false)
+}
+
+if elevator.Dirn == elevio.MD_Down{
+	elevio.SetButtonLamp(elevio.BT_HallDown, newFloor, false)
+}*/

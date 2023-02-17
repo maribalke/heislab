@@ -52,5 +52,6 @@ func (w *Watchdog) Reset(interval time.Duration) {
         w.ticker.Stop()
     }
     w.ticker = time.NewTicker(w.interval)
+    //w.eventCh <- true //la til, sjekk
 }
 

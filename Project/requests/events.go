@@ -41,13 +41,7 @@ package requests
 }*/
 
 /*func OnFloorArrival(newFloor int) {
-	//print("on floor arrival\n")
-	//var e Elevator
-	e.Floor = newFloor
-
-	elevio.SetFloorIndicator(newFloor)
-	print("t: ",e.Behaviour,"\n")
-	switch e.Behaviour {
+	//print("on floor arrival\n"stopCh
 	case EB_Moving:
 		if ShouldStop(e) {
 			elevio.SetMotorDirection(elevio.MD_Stop)
