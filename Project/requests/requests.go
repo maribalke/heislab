@@ -54,44 +54,44 @@ func ShouldClearImmediately(e Elevator, f int, b elevio.ButtonType) bool {
 
 func ClearAtCurrentFloorInCurrentDirection(elevator Elevator) Elevator {
 
-	switch elevator.ClearVariant {
+	// switch elevator.ClearVariant {
 
-	case CV_All:
-		for btn := 0; btn < elevio.NUM_BUTTONS; btn++ {
-			elevator.Requests[elevator.Floor][btn] = false
-		}
-	case CV_InDirn:
-		elevator.Requests[elevator.Floor][elevio.BT_Cab] = false
+	// // case CV_All:
+	// // 	for btn := 0; btn < elevio.NUM_BUTTONS; btn++ {
+	// // 		elevator.Requests[elevator.Floor][btn] = false
+	// // 	}
+	// case CV_InDirn:
+	elevator.Requests[elevator.Floor][elevio.BT_Cab] = false
 
-		switch elevator.Dirn {
-		case elevio.MD_Up:
-			if !requests_Above(elevator) && !elevator.Requests[elevator.Floor][elevio.BT_HallUp] {
-				elevator.Requests[elevator.Floor][elevio.BT_HallDown] = false
-			}
-			elevator.Requests[elevator.Floor][elevio.BT_HallUp] = false
-		case elevio.MD_Down:
-			if !requests_Below(elevator) && !elevator.Requests[elevator.Floor][elevio.BT_HallDown] {
-				elevator.Requests[elevator.Floor][elevio.BT_HallUp] = false
-			}
-			elevator.Requests[elevator.Floor][elevio.BT_HallUp] = false
-			elevator.Requests[elevator.Floor][elevio.BT_HallDown] = false
-		case elevio.MD_Stop:
-
-		default:
-			elevator.Requests[elevator.Floor][elevio.BT_HallUp] = false
+	switch elevator.Dirn {
+	case elevio.MD_Up:
+		if !requests_Above(elevator) && !elevator.Requests[elevator.Floor][elevio.BT_HallUp] {
 			elevator.Requests[elevator.Floor][elevio.BT_HallDown] = false
 		}
+		elevator.Requests[elevator.Floor][elevio.BT_HallUp] = false
+	case elevio.MD_Down:
+		if !requests_Below(elevator) && !elevator.Requests[elevator.Floor][elevio.BT_HallDown] {
+			elevator.Requests[elevator.Floor][elevio.BT_HallUp] = false
+		}
+		elevator.Requests[elevator.Floor][elevio.BT_HallDown] = false
+	case elevio.MD_Stop:
+
+	default:
+		elevator.Requests[elevator.Floor][elevio.BT_HallUp] = false
+		elevator.Requests[elevator.Floor][elevio.BT_HallDown] = false
 	}
 	return elevator
 }
 
 func ChooseDirection(e Elevator) dirnBehaviourPair {
+	println("this floor ", e.Floor)
 	switch e.Dirn {
 	case elevio.MD_Up:
+		println("up")
 		if requests_Above(e) {
 			return dirnBehaviourPair{elevio.MD_Up, EB_Moving}
 		} else if requests_here(e) {
-			return dirnBehaviourPair{elevio.MD_Down, EB_DoorOpen}
+			return dirnBehaviourPair{elevio.MD_Stop, EB_DoorOpen}
 		} else if requests_Below(e) {
 			return dirnBehaviourPair{elevio.MD_Down, EB_Moving}
 		} else {
@@ -99,10 +99,11 @@ func ChooseDirection(e Elevator) dirnBehaviourPair {
 		}
 
 	case elevio.MD_Down:
+		println("down")
 		if requests_Below(e) {
 			return dirnBehaviourPair{elevio.MD_Down, EB_Moving}
 		} else if requests_here(e) {
-			return dirnBehaviourPair{elevio.MD_Up, EB_DoorOpen}
+			return dirnBehaviourPair{elevio.MD_Stop, EB_DoorOpen}
 		} else if requests_Above(e) {
 			return dirnBehaviourPair{elevio.MD_Up, EB_Moving}
 		} else {
@@ -110,16 +111,22 @@ func ChooseDirection(e Elevator) dirnBehaviourPair {
 		}
 
 	case elevio.MD_Stop:
-		//print("stop")
+		print("stop")
 		if requests_here(e) {
+			println("here")
 			return dirnBehaviourPair{elevio.MD_Stop, EB_DoorOpen}
 		} else if requests_Above(e) {
-			//print("opp")
+			println("abooooove")
 			return dirnBehaviourPair{elevio.MD_Up, EB_Moving}
+
 		} else if requests_Below(e) {
+			println("below")
 			return dirnBehaviourPair{elevio.MD_Down, EB_Moving}
+
 		} else {
+			println("did not find any requests")
 			return dirnBehaviourPair{elevio.MD_Stop, EB_Idle}
+
 		}
 
 	default:
@@ -128,6 +135,7 @@ func ChooseDirection(e Elevator) dirnBehaviourPair {
 }
 
 func ShouldStop(e Elevator) bool {
+	println("stoppp")
 	switch e.Dirn {
 	case elevio.MD_Down:
 		return e.Requests[e.Floor][elevio.BT_HallDown] ||
@@ -146,19 +154,50 @@ func ShouldStop(e Elevator) bool {
 		return true
 	}
 }
-
-
-
+func DeleteAllLights(numFloors int, numButtons int) {
+	for f := 0; f < numFloors; f++ {
+		for b := 0; b < numButtons; b++ {
+			elevio.SetButtonLamp(elevio.ButtonType(b), f, false)
+		}
+	}
+}
 
 // LIGHTS
-
 
 /*func ClearOrderLight(e Elevator, numFloors int, numButtons int) {
 	for f := 0; f < numFloors; f++ {
 		for b := 0; b < numButtons; b++{
-			if e.Requests[e.Floor][b] {
+			if e.Requests[e.Floor][b] && e.Dirn == elevio.MD_Up {
 				elevio.SetButtonLamp(elevio.ButtonType(b),e.Floor,false)
+				//elevio.SetButtonLamp(elevio.BT_Cab,e.Floor,false)
+			} else if e.Requests[e.Floor][b] && e.Dirn == elevio.MD_Down {
+				elevio.SetButtonLamp(elevio.ButtonType(b),e.Floor,false)
+				//elevio.SetButtonLamp(elevio.BT_Cab,e.Floor,false)
 			}
 		}
 	}
 }*/
+
+func ClearAllOrders(numFloors int, numButtons int, elevator Elevator) {
+	for f := 0; f < numFloors; f++ {
+		for b := 0; b < numButtons; b++ {
+			elevator.Requests[f][b] = false
+		}
+	}
+}
+
+func Initialize(elevator Elevator, numFloors int, numButtons int) {
+	floor := elevio.GetFloor()
+
+	DeleteAllLights(numFloors, numButtons)
+	elevio.SetDoorOpenLamp(false)
+	elevio.SetStopLamp(false)
+	ClearAllOrders(numFloors, numButtons, elevator)
+
+	if floor < 0 {
+		elevio.SetMotorDirection(elevio.MD_Up)
+		elevator.Behaviour = EB_Moving
+	} else {
+		elevator.Behaviour = EB_Idle
+	}
+}
