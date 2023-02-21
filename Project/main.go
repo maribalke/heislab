@@ -24,9 +24,9 @@ func main() {
 	// elevio.SetDoorOpenLamp(false)
 	// elevio.SetStopLamp(false)
 	// requests.ClearAllOrders(numFloors, numButtons, elevator)
-	requests.Initialize(elevator, numFloors, numButtons)
+	requests.Initialize(elevator, numFloors, numButtons) //blokkerer knappetrykk mens vi initialiserer
 
-	var direction elevio.MotorDirection = elevio.MD_Stop
+	//var direction elevio.MotorDirection = elevio.MD_Stop
 	// elevio.SetMotorDirection(direction)
 
 	drv_buttons := make(chan elevio.ButtonEvent)
@@ -50,32 +50,45 @@ func main() {
 		// - doorLight
 
 		case <-dog.Event():
+
+			log.Println("behaviour i dog:", elevator.Behaviour)
 			dog.Stop()
 			elevio.SetDoorOpenLamp(false)
-
+			elevator.Behaviour = requests.EB_Idle
 			ch_nextOrder <- true
 
 		case <-ch_nextOrder:
+			log.Println("behaviour først:", elevator.Behaviour)
+			log.Println("next Order")
+			//log.Println("dir:", elevator.Dirn)
 			requests.ChooseDirection(elevator)
 			pair := requests.ChooseDirection(elevator)
 			elevator.Dirn = pair.Dirn
 			elevator.Behaviour = pair.Behaviour
+			log.Println("behaviour etter:", elevator.Behaviour)
+			//log.Println("behaviour:", elevator.Behaviour)
 			elevio.SetMotorDirection(elevator.Dirn)
-			println("new dir: ", elevator.Dirn)
-			println("behaviour: ", elevator.Behaviour)
+
+			// println("new dir: ", elevator.Dirn)
+			// println("behaviour: ", elevator.Behaviour)
 
 		case newButtonPress := <-drv_buttons:
+			log.Println("new buttonpress")
 			b := newButtonPress.Button
 			f := newButtonPress.Floor
 
+			log.Println("behaviour i newButtonPress:", elevator.Behaviour)
 			switch elevator.Behaviour {
 
 			case requests.EB_DoorOpen:
 
 				if requests.ShouldClearImmediately(elevator, f, b) {
+
 					elevio.SetDoorOpenLamp(true)
+					log.Println("skru av lys")
 					elevio.SetButtonLamp(b, f, false)
 					//dog.Reset(3 * time.Second)
+					//elevator.Behaviour = requests.EB_DoorOpen
 					dog.Stop() // SPØR OM RESETEN
 					go dog.Start()
 
@@ -95,13 +108,16 @@ func main() {
 				elevator.Dirn = pair.Dirn
 				elevator.Behaviour = pair.Behaviour
 
-				println("new dir: ", elevator.Dirn)
-				println("behaviour: ", elevator.Behaviour)
+				// println("new dir: ", elevator.Dirn)
+				// println("behaviour: ", elevator.Behaviour)
 
 				switch pair.Behaviour {
 				case requests.EB_DoorOpen:
+					log.Println("dir:", elevator.Dirn)
 					go dog.Start()
 					elevio.SetDoorOpenLamp(true)
+					elevator.Requests[f][b] = false
+					elevio.SetButtonLamp(b, f, false)
 
 				case requests.EB_Moving:
 					elevio.SetMotorDirection(elevator.Dirn)
@@ -123,6 +139,7 @@ func main() {
 			case requests.EB_Moving:
 				if requests.ShouldStop(elevator) {
 					elevio.SetMotorDirection(elevio.MD_Stop)
+					elevator.Behaviour = requests.EB_DoorOpen
 					elevator = requests.ClearAtCurrentFloorInCurrentDirection(elevator)
 					log.Println("floor: ", elevator.Floor)
 
@@ -145,9 +162,11 @@ func main() {
 			if obstr {
 				log.Println("obstruction")
 				elevio.SetMotorDirection(elevio.MD_Stop)
+				elevio.SetDoorOpenLamp(true)
 			} else {
 				log.Println("obstruction is over")
-				elevio.SetMotorDirection(direction)
+				elevio.SetDoorOpenLamp(false)
+				ch_nextOrder <- true
 			}
 
 		case stop := <-drv_stop:

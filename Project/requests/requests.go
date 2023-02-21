@@ -41,13 +41,16 @@ func requests_here(e Elevator) bool {
 }
 
 func ShouldClearImmediately(e Elevator, f int, b elevio.ButtonType) bool {
+	println("dir ",e.Dirn)
 	if e.Floor == f &&
 		((e.Dirn == elevio.MD_Up && b == elevio.BT_HallUp) ||
 			(e.Dirn == elevio.MD_Down && b == elevio.BT_HallDown) ||
-			e.Dirn == elevio.MD_Stop ||
+			(!requests_Above(e)&&!requests_Below(e)) ||
 			b == elevio.BT_Cab) {
+			println("should clear")
 		return true
 	} else {
+		println("should not clear")
 		return false
 	}
 }
@@ -84,10 +87,10 @@ func ClearAtCurrentFloorInCurrentDirection(elevator Elevator) Elevator {
 }
 
 func ChooseDirection(e Elevator) dirnBehaviourPair {
-	println("this floor ", e.Floor)
+	//println("this floor ", e.Floor)
 	switch e.Dirn {
 	case elevio.MD_Up:
-		println("up")
+		//println("up")
 		if requests_Above(e) {
 			return dirnBehaviourPair{elevio.MD_Up, EB_Moving}
 		} else if requests_here(e) {
@@ -99,7 +102,7 @@ func ChooseDirection(e Elevator) dirnBehaviourPair {
 		}
 
 	case elevio.MD_Down:
-		println("down")
+		//println("down")
 		if requests_Below(e) {
 			return dirnBehaviourPair{elevio.MD_Down, EB_Moving}
 		} else if requests_here(e) {
@@ -111,20 +114,20 @@ func ChooseDirection(e Elevator) dirnBehaviourPair {
 		}
 
 	case elevio.MD_Stop:
-		print("stop")
+		//print("stop")
 		if requests_here(e) {
-			println("here")
+			//println("here")
 			return dirnBehaviourPair{elevio.MD_Stop, EB_DoorOpen}
 		} else if requests_Above(e) {
-			println("abooooove")
+			//println("abooooove")
 			return dirnBehaviourPair{elevio.MD_Up, EB_Moving}
 
 		} else if requests_Below(e) {
-			println("below")
+			//println("below")
 			return dirnBehaviourPair{elevio.MD_Down, EB_Moving}
 
 		} else {
-			println("did not find any requests")
+			//println("did not find any requests")
 			return dirnBehaviourPair{elevio.MD_Stop, EB_Idle}
 
 		}
@@ -187,17 +190,16 @@ func ClearAllOrders(numFloors int, numButtons int, elevator Elevator) {
 }
 
 func Initialize(elevator Elevator, numFloors int, numButtons int) {
-	floor := elevio.GetFloor()
+	//floor := elevio.GetFloor()
 
 	DeleteAllLights(numFloors, numButtons)
 	elevio.SetDoorOpenLamp(false)
 	elevio.SetStopLamp(false)
 	ClearAllOrders(numFloors, numButtons, elevator)
 
-	if floor < 0 {
+	for elevio.GetFloor() == -1 {
 		elevio.SetMotorDirection(elevio.MD_Up)
 		elevator.Behaviour = EB_Moving
-	} else {
-		elevator.Behaviour = EB_Idle
 	}
+	elevio.SetMotorDirection(elevio.MD_Stop)
 }
